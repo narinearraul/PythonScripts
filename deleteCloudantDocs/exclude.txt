@@ -1,0 +1,5 @@
+##Replace this with a list of document ID’s you wish to exclude from deletion
+
+exampleID
+_designDocument
+sotherID
