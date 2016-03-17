@@ -8,40 +8,46 @@ import requests
 
 modules = open("package.json", "r")
 packageJson = modules.read()
-
+markdown = open("npmDependencies.md", "w")
 print "########################\n"
 print "Package.json file you provided is: %s" % packageJson
 print "########################\n"
 packageJson = json.loads(packageJson)
 dependencies = packageJson["dependencies"]
 devDependencies = packageJson["devDependencies"]
-
     
 def scrapeData(module):
+    moduleInfo = ""
     url = "https://www.npmjs.com/package/" + module
     #print module name in the md file followd by a pipe
-    print  "| " + module + " | ",
+    moduleInfo = "| " + module + " | "
     request = requests.get(url)
     data = request.text
     soup = BeautifulSoup(data, "html.parser")
     infoBox = soup.find("ul", class_="box")
     for span in infoBox.find_all("span"):
-        print ' '.join(span.text.split()),
-        print " | " ,
+        moduleInfo += ' '.join(span.text.split())
+        moduleInfo +=  " | " 
     for version in infoBox.find_all("strong"):
-        print version.text + " | ",
+        moduleInfo +=  version.text + " | "
     count = 0
     for links in infoBox.find_all("a"):
         if count != 0:
-            print "[" + links.text + "](" + links.get('href') + ") | ",
+            moduleInfo +=  "[" + links.text + "](" + links.get('href') + ") | "
         count += 1
+    print moduleInfo
+    return moduleInfo
         
 #start a md file and write the table headers
-print "| Module Name | Publisher | Date Published | Version | GitHub | License |"
-print "|:------------| ----------| ---------------| --------| -------| -------:|"
+markdown.write("| Module Name | Publisher | Date Published | Version | GitHub | License |\n")
+markdown.write("|:------------| ----------| ---------------| --------| -------| -------:|\n")
 
 # print dependencies
 for key in itertools.chain(dependencies,devDependencies):
-    scrapeData(key)
-    print " "
+    print "Making row for module: " + key
+    moduleInfo = scrapeData(key)
+    markdown.write(moduleInfo + "\n")
+    # moduleInfo = ""
+    
+markdown.close();
     
