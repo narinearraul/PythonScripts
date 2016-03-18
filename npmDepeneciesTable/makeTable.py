@@ -12,9 +12,13 @@ markdown = open("npmDependencies.md", "w")
 print "########################\n"
 print "Package.json file you provided is: %s" % packageJson
 print "########################\n"
+dependencies = {}
+devDependencies = {}
 packageJson = json.loads(packageJson)
-dependencies = packageJson["dependencies"]
-devDependencies = packageJson["devDependencies"]
+if  "dependencies" in packageJson.keys():
+    dependencies = packageJson["dependencies"]
+if  "devDependencies" in packageJson.keys():
+    devDependencies = packageJson["devDependencies"]
     
 def scrapeData(module):
     moduleInfo = ""
