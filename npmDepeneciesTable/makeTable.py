@@ -35,7 +35,10 @@ def scrapeData(module):
     for version in infoBox.find_all("strong"):
         moduleInfo +=  version.text + " | "
     count = 0
+    linkCount = len(infoBox.find_all("a"))
     for links in infoBox.find_all("a"):
+        if count == 1 and linkCount == 2:
+            moduleInfo += " | " 
         if count != 0:
             moduleInfo +=  "[" + links.text + "](" + links.get('href') + ") | "
         count += 1
@@ -51,7 +54,6 @@ for key in itertools.chain(dependencies,devDependencies):
     print "Making row for module: " + key
     moduleInfo = scrapeData(key)
     markdown.write(moduleInfo + "\n")
-    # moduleInfo = ""
     
 markdown.close();
     
