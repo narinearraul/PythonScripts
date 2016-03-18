@@ -1,14 +1,15 @@
 # This script will take your package.json file for your node dependencies and
 # make a markdown file with a table with their details
 # 3/17/16
+import sys
 import json
 import itertools
 from bs4 import BeautifulSoup
 import requests
 
-modules = open("package.json", "r")
+modules = open(sys.argv[1], "r")
 packageJson = modules.read()
-markdown = open("npmDependencies.md", "w")
+markdown = open(sys.argv[2], "w")
 print "########################\n"
 print "Package.json file you provided is: %s" % packageJson
 print "########################\n"
